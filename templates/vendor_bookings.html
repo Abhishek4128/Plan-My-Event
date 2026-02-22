@@ -1,0 +1,595 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Vendor Bookings</title>
+</head>
+<body>
+
+<h2>Bookings For Your Halls</h2>
+
+<table border="1" cellpadding="10">
+<tr>
+    <th>Hall Name</th>
+    <th>User Name</th>
+    <th>Event Date</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for booking in bookings %}
+<tr>
+    <td>
+       <img src="{{ booking.hall_image }}" width="100"><br>
+       {{ booking.hall_name }}
+    </td>
+    <td>{{ booking.user_name }}</td>
+    <td>{{ booking.event_date }}</td>
+    <td>{{ booking.status }}</td>
+
+    <td>
+        {% if booking.status == "pending" %}
+            <a href="/vendor/approve-booking/{{ booking.id }}">Approve</a>
+            |
+            <a href="/vendor/reject-booking/{{ booking.id }}">Reject</a>
+        {% else %}
+            No Action
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+<a href="/vendor/dashboard">Back</a>
+
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Bookings - Hall Management</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: move 25s infinite linear;
+            bottom: -150px;
+        }
+
+        .bg-animation span:nth-child(1) { left: 15%; width: 60px; height: 60px; animation-delay: 0s; }
+        .bg-animation span:nth-child(2) { left: 30%; width: 30px; height: 30px; animation-delay: 2s; }
+        .bg-animation span:nth-child(3) { left: 60%; width: 40px; height: 40px; animation-delay: 4s; }
+        .bg-animation span:nth-child(4) { left: 80%; width: 80px; height: 80px; animation-delay: 1s; }
+        .bg-animation span:nth-child(5) { left: 45%; width: 50px; height: 50px; animation-delay: 3s; }
+        .bg-animation span:nth-child(6) { left: 90%; width: 25px; height: 25px; animation-delay: 5s; }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 35px 45px;
+            border-radius: 25px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.6);
+        }
+
+        .back-btn::after {
+            content: '←';
+            font-size: 1.4rem;
+        }
+
+        /* Table Container with Glassmorphism */
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modern Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.3) 0%, rgba(79, 172, 254, 0.3) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        th {
+            color: white;
+            padding: 25px 20px;
+            text-align: left;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        tbody tr::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.2), rgba(255, 8, 68, 0.2));
+            transition: 0.4s;
+            z-index: -1;
+        }
+
+        tbody tr:hover::before {
+            width: 100%;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.01);
+            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.3);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            font-weight: 500;
+            vertical-align: middle;
+        }
+
+        /* Hall Image in Table */
+        .hall-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hall-thumbnail {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .hall-thumbnail:hover {
+            transform: scale(1.1);
+        }
+
+        .hall-name-text {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #ffffff;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #ff9800, #ffc107);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.5);
+        }
+
+        .status-confirmed {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            color: white;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .status-rejected {
+            background: linear-gradient(135deg, #f44336, #e57373);
+            color: white;
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.5);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #f44336, #e57373);
+            color: white;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-reject:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.6);
+        }
+
+        .no-action {
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 100px 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .empty-state-icon {
+            font-size: 6rem;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .empty-state h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media(max-width: 1200px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 1000px;
+            }
+        }
+
+        /* Row Animation */
+        tbody tr {
+            animation: slideIn 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff0844, #ffb199);
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-animation">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<div class="container">
+    
+    <div class="header">
+        <h2>📋 Bookings For Your Halls</h2>
+        <a href="/vendor/dashboard" class="back-btn">Dashboard</a>
+    </div>
+
+    <div class="table-container">
+        {% if bookings %}
+        <table>
+            <thead>
+                <tr>
+                    <th>🏛️ Hall Details</th>
+                    <th>👤 User Name</th>
+                    <th>📅 Event Date</th>
+                    <th>📊 Status</th>
+                    <th>⚡ Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>
+                        <div class="hall-info">
+                            <img src="{{ booking.hall_image }}" class="hall-thumbnail" alt="{{ booking.hall_name }}">
+                            <div class="hall-name-text">{{ booking.hall_name }}</div>
+                        </div>
+                    </td>
+                    <td>{{ booking.user_name }}</td>
+                    <td>{{ booking.event_date }}</td>
+                    <td>
+                        <span class="status-badge status-{{ booking.status|lower }}">
+                            {{ booking.status }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if booking.status == "pending" %}
+                        <div class="action-buttons">
+                            <a href="/vendor/approve-booking/{{ booking.id }}" class="action-btn btn-approve">
+                                ✅ Approve
+                            </a>
+                            <a href="/vendor/reject-booking/{{ booking.id }}" class="action-btn btn-reject">
+                                ❌ Reject
+                            </a>
+                        </div>
+                        {% else %}
+                        <span class="no-action">No Action</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3>No Bookings Yet</h3>
+            <p>Your booking requests will appear here once users start booking your halls.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

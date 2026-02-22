@@ -1,0 +1,466 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+ 
+        .signup-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+ 
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+ 
+        .signup-header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+ 
+        .signup-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+ 
+        .form-group {
+            margin-bottom: 1rem;
+        }
+ 
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+ 
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+ 
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+ 
+        .signup-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 1rem;
+        }
+ 
+        .signup-btn:hover {
+            transform: translateY(-2px);
+        }
+ 
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+ 
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+ 
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+ 
+        @media (max-width: 480px) {
+            .signup-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <h1>Log in </h1>
+            <p>LOGIN</p>
+        </div>
+ 
+       
+       
+        <form id="signupForm" method="post" action="/login" >
+       
+             
+ 
+           
+           
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email"  autocomplete="off" required />
+            </div>
+           
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password"/>
+            </div>
+           
+ 
+ 
+           
+            <button type="submit" class="signup-btn">Log in</button>
+        </form>
+       
+        <div class="login-link">
+            Already have an account? <a href="/signup">Sign up</a>
+        </div>
+    </div>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Function Hall Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+ 
+        .signup-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Decorative top bar */
+        .signup-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1e3c72, #7e22ce, #1e3c72);
+            border-radius: 20px 20px 0 0;
+            animation: gradientShift 3s ease infinite;
+            background-size: 200% 100%;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+ 
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        /* Icon/Logo area */
+        .signup-header .icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #1e3c72 0%, #7e22ce 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(126, 34, 206, 0.3);
+        }
+ 
+        .signup-header h1 {
+            color: #1e3c72;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72, #7e22ce);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+ 
+        .signup-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+ 
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+ 
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+ 
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #7e22ce;
+            box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.1);
+            transform: translateY(-2px);
+        }
+ 
+        .signup-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1e3c72 0%, #7e22ce 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(126, 34, 206, 0.3);
+        }
+ 
+        .signup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(126, 34, 206, 0.4);
+        }
+        
+        .signup-btn:active {
+            transform: translateY(-1px);
+        }
+ 
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+ 
+        .login-link a {
+            color: #7e22ce;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+ 
+        .login-link a:hover {
+            color: #1e3c72;
+            text-decoration: underline;
+        }
+        
+        /* Forgot password link */
+        .forgot-password {
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+        
+        .forgot-password a {
+            color: #7e22ce;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: #1e3c72;
+            text-decoration: underline;
+        }
+        
+        /* Welcome message */
+        .welcome-message {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.1), rgba(126, 34, 206, 0.1));
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #7e22ce;
+        }
+        
+        .welcome-message p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+ 
+        @media (max-width: 480px) {
+            .signup-container {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .signup-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .signup-header .icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.7rem;
+            }
+        }
+        
+        /* Loading state animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .signup-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+        
+        .signup-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <div class="icon">🏛️</div>
+            <h1>Welcome Back</h1>
+            <p>Log in to manage your function halls</p>
+        </div>
+ 
+        <div class="welcome-message">
+            <p>👋 Access your dashboard to book venues, manage events, and explore beautiful function halls.</p>
+        </div>
+ 
+        <form id="signupForm" method="post" action="/login">
+ 
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" autocomplete="off" required placeholder="your.email@example.com" />
+            </div>
+           
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="Enter your password"/>
+                <div class="forgot-password">
+                    <a href="/forgot-password">Forgot password?</a>
+                </div>
+            </div>
+ 
+            <button type="submit" class="signup-btn">Log In</button>
+        </form>
+       
+        <div class="login-link">
+            Don't have an account? <a href="/signup">Sign up here</a>
+        </div>
+    </div>
+</body>
+</html>
